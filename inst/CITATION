@@ -1,0 +1,11 @@
+citHeader("To cite decisionRubricR in publications use:")
+
+citEntry(
+  entry       = "Article",
+  title       = "A Statistically Grounded Rubric for Evaluating Human–AI Decision Quality",
+  author      = "Amar Ahmad",
+  journal     = "Submitted manuscript",
+  year        = "2025",
+  doi         = "",
+  textVersion = "Amar Ahmad (2025). decisionRubricR: A Statistically Grounded Rubric for Evaluating Human–AI Decision Quality. R package version 0.1.0."
+)
