@@ -19,7 +19,7 @@ score_rubric(truth, prob, tau = 0.3, n_bins = 10)
 A named list with the five component scores and the composite.
 }
 \description{
-Computes five components (calibration slope proximity to 1, AUC,
+Computes five components (calibration-slope proximity to 1, AUC,
 rescaled MCC, Brier Skill Score, and decision-curve Net Benefit)
 and a weighted composite.
 }

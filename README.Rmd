@@ -2,53 +2,24 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-```
-
 # decisionRubricR
 
 <!-- badges: start -->
+[![pkgdown](https://img.shields.io/badge/docs-pkgdown-blue.svg)](https://statslabnyuad.github.io/decisionRubricR/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 <!-- badges: end -->
 
-The goal of decisionRubricR is to ...
+## Overview
+
+decisionRubricR is an R package for evaluating the quality of human–AI decision making and predictive models using a composite rubric. Instead of focusing only on accuracy, the package combines five complementary metrics: calibration slope, area under the ROC curve (AUC), Matthews correlation coefficient (MCC), Brier skill score (BSS), and decision-curve net benefit (NB). These are fused into a single composite score, making evaluation more reliable and educationally useful. The package also includes helper functions for reliability analysis (Cronbach’s alpha) and skill correlation, making it useful for both teaching and applied AI evaluation.
 
 ## Installation
 
-You can install the development version of decisionRubricR like so:
+You can install the development version from GitHub with:
 
-``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
-```
+```r
+# Install remotes if not already available
+install.packages("remotes")
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(decisionRubricR)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+# Install decisionRubricR
+remotes::install_github("StatsLabNYUAD/decisionRubricR")
