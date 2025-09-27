@@ -7,21 +7,23 @@
 score_rubric(truth, prob, tau = 0.3, weights = NULL, normalize = TRUE)
 }
 \arguments{
-\item{truth}{integer/logical 0/1}
+\item{truth}{integer/logical vector (0/1)}
 
 \item{prob}{numeric in \link{0,1}}
 
-\item{tau}{decision threshold for MCC / net benefit}
+\item{tau}{decision threshold (default 0.30)}
 
-\item{weights}{numeric length-5 (named or unnamed) giving weights
-for Cal, AUC, MCC, BSS, NB. If NULL, uses defaults
-c(.25,.20,.15,.20,.20).}
+\item{weights}{numeric length-5 (named or unnamed) giving weights for
+Cal, AUC, MCC, BSS, NB. If NULL, uses defaults
+c(.25, .20, .15, .20, .20).}
 
 \item{normalize}{logical; if TRUE, renormalize weights to sum to 1}
 }
 \value{
-list with sub-metrics, \code{components}, \code{weights_used}, and \code{composite}.
+list with sub-metrics, components, weights_used, and composite.
 }
 \description{
-Score rubric metrics and composite
+Computes five components (calibration slope proximity to 1, AUC,
+rescaled MCC, Brier Skill Score, and decision-curve Net Benefit)
+and a weighted composite.
 }
