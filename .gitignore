@@ -6,3 +6,5 @@
 .quarto
 inst/doc
 docs
+inst/app/decisionRubricR-shiny/renv/
+inst/app/decisionRubricR-shiny/rsconnect/

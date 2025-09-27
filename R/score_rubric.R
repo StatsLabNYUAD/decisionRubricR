@@ -1,52 +1,60 @@
-#' Score rubric metrics and composite
+#' Score a set of probabilistic predictions with the teaching rubric
 #'
-#' @param truth integer/logical 0/1
-#' @param prob  numeric in [0,1]
-#' @param tau   decision threshold for MCC / net benefit
-#' @param weights numeric length-5 (named or unnamed) giving weights
-#'   for Cal, AUC, MCC, BSS, NB. If NULL, uses defaults
-#'   c(.25,.20,.15,.20,.20).
-#' @param normalize logical; if TRUE, renormalize weights to sum to 1
-#' @return list with sub-metrics, `components`, `weights_used`, and `composite`.
+#' Computes five components (calibration-slope proximity to 1, AUC,
+#' rescaled MCC, Brier Skill Score, and decision-curve Net Benefit)
+#' and a weighted composite.
+#'
+#' @param truth Integer/binary vector (0/1) of true outcomes.
+#' @param prob  Numeric vector of predicted probabilities in [0,1].
+#' @param tau   Decision threshold (default 0.30).
+#' @param n_bins Number of quantile bins for calibration slope (default 10).
+#' @return A named list with the five component scores and the composite.
 #' @export
-score_rubric <- function(truth, prob, tau = 0.30,
-                         weights = NULL, normalize = TRUE) {
+score_rubric <- function(truth, prob,
+                         tau     = 0.30,
+                         n_bins  = 10) {
 
-  # ... your existing code that computes:
-  # m1 <- cal; m2 <- auc; m3 <- mcc; m4 <- bss; m5 <- nb
-  # Keep the variable names you currently use.
+  stopifnot(length(truth) == length(prob))
+  stopifnot(all(truth %in% c(0,1)))
+  stopifnot(all(is.finite(prob)) && all(prob >= 0 & prob <= 1))
 
-  # Build a named components vector (canonical names)
-  components <- c(Cal = m1, AUC = m2, MCC = m3, BSS = m4, NB = m5)
+  ## 1) Calibration slope (proximity to 1)
+  cal_tbl <- tibble::tibble(truth = truth, prob = prob) |>
+    dplyr::mutate(bin = dplyr::ntile(prob, n_bins)) |>
+    dplyr::group_by(bin) |>
+    dplyr::summarise(midpoint   = mean(prob),
+                     event_rate = mean(truth),
+                     .groups    = "drop")
+  slope <- stats::coef(stats::lm(event_rate ~ midpoint, data = cal_tbl))[2]
+  m1    <- unname(1 - abs(slope - 1))
 
-  # Resolve weights (default or user-supplied)
-  if (is.null(weights)) {
-    w <- c(Cal = .25, AUC = .20, MCC = .15, BSS = .20, NB = .20)
-  } else {
-    w <- if (is.null(names(weights))) {
-      setNames(as.numeric(weights), names(components))
-    } else {
-      # allow any order, require the 5 names
-      stopifnot(all(names(components) %in% names(weights)))
-      as.numeric(weights[names(components)])
-    }
-    w <- pmax(0, w)
-    if (normalize) {
-      s <- sum(w); if (s > 0) w <- w / s else w[] <- 1/5
-    }
-    names(w) <- names(components)
-  }
+  ## 2) AUC
+  m2 <- as.numeric(pROC::auc(response = truth, predictor = prob,
+                             levels = c(0,1), direction = "<", quiet = TRUE))
 
-  comp <- as.numeric(sum(w * components))
+  ## 3) MCC (rescaled to [0,1])
+  decision <- ifelse(prob > tau, 1, 0)  # keep as numeric to avoid integer overflow
+  m3 <- mcc_rescaled(truth, decision)
 
-  # Return structure compatible with old callers + richer fields
-  out <- list(
-    cal = m1, auc = m2, mcc = m3, bss = m4, nb = m5,
-    components   = components,
-    weights_used = w,
-    composite    = comp
-  )
-  # For very old code that expects $comp:
-  out$comp <- out$composite
-  out
+  ## 4) Brier Skill Score
+  bs  <- mean((prob  - truth)^2)
+  ref <- mean((mean(truth) - truth)^2)
+  m4  <- if (ref == 0) 1 else 1 - bs / ref
+
+  ## 5) Net Benefit (rescaled via theoretical range)
+  TP <- sum(truth == 1 & decision == 1)
+  FP <- sum(truth == 0 & decision == 1)
+  n  <- length(truth)
+  nb_raw <- TP/n - FP/n * tau/(1 - tau)
+
+  nb_min <- -tau/(1 - tau)   # worst case: all FPs
+  nb_max <- 1                # best case: perfect TPs, no FP
+
+  m5 <- (nb_raw - nb_min) / (nb_max - nb_min)
+  m5 <- max(0, min(1, m5))   # clamp to [0,1]
+
+  ## Composite
+  comp <- unname(0.25*m1 + 0.20*m2 + 0.15*m3 + 0.20*m4 + 0.20*m5)
+
+  list(cal = m1, auc = m2, mcc = m3, bss = m4, nb = m5, comp = comp)
 }
