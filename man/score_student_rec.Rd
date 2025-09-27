@@ -7,9 +7,9 @@
 score_student_rec(truth, prob, ...)
 }
 \arguments{
-\item{truth}{Integer/binary vector (0/1) of true outcomes.}
+\item{truth}{integer/logical 0/1}
 
-\item{prob}{Numeric vector of predicted probabilities in \link{0,1}.}
+\item{prob}{numeric in \link{0,1}}
 }
 \value{
 A named list with the five component scores and the composite (same shape as \code{score_rubric()}).

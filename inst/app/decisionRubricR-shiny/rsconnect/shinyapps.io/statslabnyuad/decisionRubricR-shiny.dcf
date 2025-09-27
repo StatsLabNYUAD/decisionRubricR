@@ -1,0 +1,10 @@
+name: decisionRubricR-shiny
+title: decisionRubricR-shiny
+username: statslabnyuad
+account: statslabnyuad
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15582571
+bundleId: 10960729
+url: https://statslabnyuad.shinyapps.io/decisionRubricR-shiny/
+version: 1

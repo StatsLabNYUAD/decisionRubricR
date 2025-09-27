@@ -2,24 +2,26 @@
 % Please edit documentation in R/score_rubric.R
 \name{score_rubric}
 \alias{score_rubric}
-\title{Score a set of probabilistic predictions with the teaching rubric}
+\title{Score rubric metrics and composite}
 \usage{
-score_rubric(truth, prob, tau = 0.3, n_bins = 10)
+score_rubric(truth, prob, tau = 0.3, weights = NULL, normalize = TRUE)
 }
 \arguments{
-\item{truth}{Integer/binary vector (0/1) of true outcomes.}
+\item{truth}{integer/logical 0/1}
 
-\item{prob}{Numeric vector of predicted probabilities in \link{0,1}.}
+\item{prob}{numeric in \link{0,1}}
 
-\item{tau}{Decision threshold (default 0.30).}
+\item{tau}{decision threshold for MCC / net benefit}
 
-\item{n_bins}{Number of quantile bins for calibration slope (default 10).}
+\item{weights}{numeric length-5 (named or unnamed) giving weights
+for Cal, AUC, MCC, BSS, NB. If NULL, uses defaults
+c(.25,.20,.15,.20,.20).}
+
+\item{normalize}{logical; if TRUE, renormalize weights to sum to 1}
 }
 \value{
-A named list with the five component scores and the composite.
+list with sub-metrics, \code{components}, \code{weights_used}, and \code{composite}.
 }
 \description{
-Computes five components (calibration-slope proximity to 1, AUC,
-rescaled MCC, Brier Skill Score, and decision-curve Net Benefit)
-and a weighted composite.
+Score rubric metrics and composite
 }
