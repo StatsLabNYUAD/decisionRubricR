@@ -34,6 +34,7 @@ score_rubric <- function(truth, prob, tau = 0.30,
   )
   slope <- stats::coef(stats::lm(event_rate ~ midpoint, data = cal_tbl))[2]
   m1 <- unname(1 - abs(slope - 1))
+  m1 <- max(0, min(1, m1))  # clamp to [0,1]
 
   ## --- 2) AUC ---------------------------------------------------------
   m2 <- as.numeric(

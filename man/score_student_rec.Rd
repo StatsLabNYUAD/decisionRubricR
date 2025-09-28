@@ -7,7 +7,7 @@
 score_student_rec(truth, prob, ...)
 }
 \arguments{
-\item{truth}{integer/logical 0/1}
+\item{truth}{integer/logical vector (0/1)}
 
 \item{prob}{numeric in \link{0,1}}
 }
