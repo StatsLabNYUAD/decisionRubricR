@@ -7,23 +7,36 @@
 score_rubric(truth, prob, tau = 0.3, weights = NULL, normalize = TRUE)
 }
 \arguments{
-\item{truth}{integer/logical vector (0/1)}
+\item{truth}{integer/logical vector (0/1).}
 
-\item{prob}{numeric in \link{0,1}}
+\item{prob}{numeric in \link{0,1}.}
 
-\item{tau}{decision threshold (default 0.30)}
+\item{tau}{decision threshold (default 0.30).}
 
 \item{weights}{numeric length-5 (named or unnamed) giving weights for
-Cal, AUC, MCC, BSS, NB. If NULL, uses defaults
-c(.25, .20, .15, .20, .20).}
+Cal, AUC, MCC, BSS, NB. Default = c(.25, .20, .15, .20, .20).}
 
-\item{normalize}{logical; if TRUE, renormalize weights to sum to 1}
+\item{normalize}{logical; if TRUE, renormalize weights to sum to 1.}
 }
 \value{
-list with sub-metrics, components, weights_used, and composite.
+list with sub-metrics, weights_used, and composite.
 }
 \description{
 Computes five components (calibration slope proximity to 1, AUC,
 rescaled MCC, Brier Skill Score, and decision-curve Net Benefit)
 and a weighted composite.
+}
+\details{
+\itemize{
+\item Calibration: m1 = 1 - |s - 1| clamped to \link{0,1}, where s is the slope
+of event rate vs predicted midpoint. This is simple and monotone but
+plateaus when |s - 1| ≤ 0; pathological slopes (≈0) map to 0.
+Consider quadratic penalties if more sensitivity around 1 is needed.
+\item MCC: rescaled from \link{-1,1} to \link{0,1}. If denominator=0 (degenerate),
+returns 0.5 (neutral).
+\item Net Benefit: affine-rescaled to \link{0,1}. Requires prevalence π > 0;
+a small epsilon prevents division by zero when π≈0.
+\item Composite: convex combination of components with weights summing to 1,
+so Composite ∈ \link{0,1}.
+}
 }
