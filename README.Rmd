@@ -1,4 +1,5 @@
----
+# Create README.Rmd
+readme_content <- '---
 output: github_document
 ---
 
