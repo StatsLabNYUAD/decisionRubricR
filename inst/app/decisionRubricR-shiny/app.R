@@ -1,25 +1,19 @@
 # inst/app/decisionRubricR-shiny/app.R
 
-# --- dependency check (safe for servers) ---
-need <- c("shiny", "ggplot2", "DT", "dplyr", "tibble", "pROC")
-miss <- need[!sapply(need, requireNamespace, quietly = TRUE)]
-if (length(miss)) {
-  if (interactive()) {
-    install.packages(miss, repos = "https://cloud.r-project.org")
-  } else {
-    stop("Missing packages: ", paste(miss, collapse = ", "),
-         "\nPlease install them and restart the app.")
-  }
+# Force install the latest version from GitHub
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
 }
-
 if (!requireNamespace("decisionRubricR", quietly = TRUE)) {
-  stop("Package 'decisionRubricR' not found. Install from your source/GitHub and retry.")
+  remotes::install_github("StatsLabNYUAD/decisionRubricR", force = TRUE)
 }
 
+# Load required libraries
 library(shiny)
-library(decisionRubricR)
 library(DT)
 library(ggplot2)
+library(dplyr)
+library(decisionRubricR)
 
 `%||%` <- function(a, b) if (!is.null(a)) a else b
 
