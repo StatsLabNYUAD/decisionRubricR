@@ -2,18 +2,21 @@
 % Please edit documentation in R/recalibration.R
 \name{score_student_rec}
 \alias{score_student_rec}
-\title{Score after Platt recalibration}
+\title{Score a student after recalibration}
 \usage{
 score_student_rec(truth, prob, ...)
 }
 \arguments{
-\item{truth}{integer/logical vector (0/1)}
+\item{truth}{Integer/logical vector coded \code{0/1}.}
 
-\item{prob}{numeric in \link{0,1}}
+\item{prob}{Numeric vector in \verb{[0, 1]}.}
+
+\item{...}{Additional arguments passed to \code{\link[=score_rubric]{score_rubric()}}
+(e.g., \code{tau}, \code{weights}, \code{normalize}).}
 }
 \value{
-A named list with the five component scores and the composite (same shape as \code{score_rubric()}).
+The list returned by \code{\link[=score_rubric]{score_rubric()}} (components + composite).
 }
 \description{
-Applies \code{platt_recal()} to probabilities, then calls \code{score_rubric()}.
+Applies \code{platt_recal()} to \code{prob}, then calls \code{\link[=score_rubric]{score_rubric()}}.
 }
