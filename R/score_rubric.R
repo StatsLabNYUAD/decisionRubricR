@@ -88,6 +88,7 @@ score_rubric <- function(truth, prob, tau = 0.30,
   }
 
   ## --- 2) AUC ---------------------------------------------------------
+<<<<<<< HEAD
   m2 <- tryCatch({
     if (sum(truth) == 0 || sum(truth) == length(truth)) {
       0.5  # No discrimination possible with one class
@@ -103,6 +104,24 @@ score_rubric <- function(truth, prob, tau = 0.30,
   })
   
   if (is.na(m2) || !is.finite(m2)) m2 <- 0.5
+=======
+## --- 2) AUC ---------------------------------------------------------
+raw_auc <- tryCatch({
+  # Undefined if only one class present
+  if (length(unique(stats::na.omit(truth))) < 2L) {
+    NA_real_
+  } else {
+    # Let pROC choose the direction (it maximizes AUC >= 0.5)
+    roc_obj <- pROC::roc(response = truth, predictor = prob,
+                         levels = c(0, 1), direction = "auto", quiet = TRUE)
+    as.numeric(pROC::auc(roc_obj))
+  }
+}, error = function(e) NA_real_)
+
+# Fallback to chance if NA; clamp to [0.5, 1]
+m2 <- if (is.na(raw_auc) || !is.finite(raw_auc)) 0.5 else raw_auc
+m2 <- max(0.5, min(1, m2))
+>>>>>>> 9eb7eb6 (fix(score_rubric): robust AUC handling (single-class, errors); clamp to [0.5,1])
 
   ## --- 3) MCC (rescaled) ----------------------------------------------
   decision <- ifelse(prob > tau, 1, 0)
