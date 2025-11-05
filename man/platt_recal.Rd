@@ -2,25 +2,26 @@
 % Please edit documentation in R/recalibration.R
 \name{platt_recal}
 \alias{platt_recal}
-\title{Platt (logistic) recalibration}
+\title{Platt scaling recalibration}
 \usage{
 platt_recal(truth, prob)
 }
 \arguments{
-\item{truth}{Integer/logical vector of outcomes (0/1).}
+\item{truth}{Integer/logical vector coded \code{0/1}.}
 
-\item{prob}{Numeric vector of predicted probabilities in \link{0,1}.}
+\item{prob}{Numeric vector in \verb{[0, 1]} of predicted probabilities.}
 }
 \value{
-Numeric vector of recalibrated probabilities in \link{0,1}.
+Numeric vector of recalibrated probabilities in \verb{[0, 1]}.
 }
 \description{
-Fits a logistic calibration model: glm(truth ~ logit(prob)).
-Returns calibrated probabilities in \link{0, 1}.
+Fits a logistic calibration model and returns recalibrated probabilities.
+Standard Platt scaling regresses the binary outcome on the logit of the
+original scores and maps back to probabilities.
 }
 \examples{
-set.seed(1)
-truth <- rbinom(100, 1, 0.3)
-prob  <- runif(100)
-p2 <- platt_recal(truth, prob)
+\dontrun{
+set.seed(1); truth <- rbinom(200, 1, 0.3); prob <- runif(200)
+prob_star <- platt_recal(truth, prob)
+}
 }

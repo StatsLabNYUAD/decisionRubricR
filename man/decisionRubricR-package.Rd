@@ -6,10 +6,10 @@
 \alias{decisionRubricR-package}
 \title{decisionRubricR: Teaching rubric for human–AI decision quality}
 \description{
-What the package does (one paragraph).
+Provides utilities for scoring, validating, and visualizing AI decision-making models based on calibration, discrimination, and net-benefit metrics. Includes a reproducible Shiny demo and helper functions for recalibration and student rubric scoring.
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com}
+\strong{Maintainer}: Amar Ahmad \email{amar.ahmad@nyu.edu}
 
 }
 \keyword{internal}

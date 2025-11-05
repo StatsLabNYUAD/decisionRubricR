@@ -7,23 +7,33 @@
 score_rubric(truth, prob, tau = 0.3, weights = NULL, normalize = TRUE)
 }
 \arguments{
-\item{truth}{integer/logical vector (0/1)}
+\item{truth}{integer/logical vector coded as \code{0/1}.}
 
-\item{prob}{numeric in \link{0,1}}
+\item{prob}{numeric in \verb{[0, 1]}.}
 
-\item{tau}{decision threshold (default 0.30)}
+\item{tau}{decision threshold (default \code{0.30}).}
 
 \item{weights}{numeric length-5 (named or unnamed) giving weights for
-Cal, AUC, MCC, BSS, NB. If NULL, uses defaults
-c(.25, .20, .15, .20, .20).}
+Cal, AUC, MCC, BSS, NB. Default = \code{c(.25, .20, .15, .20, .20)}.}
 
-\item{normalize}{logical; if TRUE, renormalize weights to sum to 1}
+\item{normalize}{logical; if \code{TRUE}, renormalize weights to sum to 1.}
 }
 \value{
-list with sub-metrics, components, weights_used, and composite.
+list with sub-metrics, \code{weights_used}, and both \code{comp} and \code{composite}.
 }
 \description{
 Computes five components (calibration slope proximity to 1, AUC,
 rescaled MCC, Brier Skill Score, and decision-curve Net Benefit)
 and a weighted composite.
+}
+\details{
+\itemize{
+\item Calibration: \verb{m1 = 1 - |s - 1|} clamped to \verb{[0, 1]}, where \code{s} is the slope
+of event rate vs predicted midpoint.
+\item MCC: rescaled from \verb{[-1, 1]} to \verb{[0, 1]}. If denominator = 0 (degenerate),
+returns \code{0.5} (neutral).
+\item Net Benefit: affine-rescaled to \verb{[0, 1]}. Requires prevalence \code{π > 0}.
+\item Composite: convex combination of components with weights summing to 1,
+so composite ∈ \verb{[0, 1]}.
+}
 }

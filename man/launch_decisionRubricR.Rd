@@ -6,6 +6,21 @@
 \usage{
 launch_decisionRubricR(...)
 }
+\arguments{
+\item{...}{Additional arguments passed to \code{\link[shiny:runApp]{shiny::runApp()}}
+(e.g., \code{display.mode = "showcase"}).}
+}
+\value{
+Invisibly, the result of \code{\link[shiny:runApp]{shiny::runApp()}}.
+}
 \description{
-Launch the decisionRubricR Shiny demo
+Starts the example app bundled with the package.
+}
+\examples{
+\dontrun{
+  launch_decisionRubricR()
+}
+}
+\seealso{
+\code{\link[shiny:runApp]{shiny::runApp()}}
 }
